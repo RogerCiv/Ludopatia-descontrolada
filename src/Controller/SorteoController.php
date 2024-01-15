@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Sorteo;
 use App\Form\SorteoType;
+use App\Repository\NumerosLoteriaRepository;
 use App\Repository\SorteoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,13 +24,18 @@ class SorteoController extends AbstractController
     }
 
     #[Route('/new', name: 'app_sorteo_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager,NumerosLoteriaRepository $numerosLoteriaRepository): Response
     {
         $sorteo = new Sorteo();
         $form = $this->createForm(SorteoType::class, $sorteo);
         $form->handleRequest($request);
+        $numLoterias=$numerosLoteriaRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $sorteo->setFecha(new \DateTime());
+            foreach ($numLoterias as $numeroLoteria) {
+                $sorteo->addNumerosLoteria($numeroLoteria);
+            }
             $entityManager->persist($sorteo);
             $entityManager->flush();
 

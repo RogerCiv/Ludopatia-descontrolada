@@ -37,10 +37,17 @@ class Sorteo
     #[ORM\OneToMany(mappedBy: 'sorteo', targetEntity: Apuesta::class)]
     private Collection $apuestas;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $fecha_fin = null;
+
+    #[ORM\ManyToMany(targetEntity: NumerosLoteria::class, inversedBy: 'sorteos')]
+    private Collection $numerosLoteria;
+
 
     public function __construct()
     {
         $this->apuestas = new ArrayCollection();
+        $this->numerosLoteria = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,6 +153,42 @@ class Sorteo
                 $apuesta->setSorteo(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFechaFin(): ?\DateTimeInterface
+    {
+        return $this->fecha_fin;
+    }
+
+    public function setFechaFin(\DateTimeInterface $fecha_fin): static
+    {
+        $this->fecha_fin = $fecha_fin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, NumerosLoteria>
+     */
+    public function getNumerosLoteria(): Collection
+    {
+        return $this->numerosLoteria;
+    }
+
+    public function addNumerosLoteria(NumerosLoteria $numerosLoteria): static
+    {
+        if (!$this->numerosLoteria->contains($numerosLoteria)) {
+            $this->numerosLoteria->add($numerosLoteria);
+        }
+
+        return $this;
+    }
+
+    public function removeNumerosLoteria(NumerosLoteria $numerosLoteria): static
+    {
+        $this->numerosLoteria->removeElement($numerosLoteria);
 
         return $this;
     }

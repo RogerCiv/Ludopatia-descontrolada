@@ -21,9 +21,13 @@ class NumerosLoteria
     #[ORM\OneToMany(mappedBy: 'numeroLoteria', targetEntity: Apuesta::class)]
     private Collection $apuestas;
 
+    #[ORM\ManyToMany(targetEntity: Sorteo::class, mappedBy: 'numerosLoteria')]
+    private Collection $sorteos;
+
     public function __construct()
     {
         $this->apuestas = new ArrayCollection();
+        $this->sorteos = new ArrayCollection();
     }
 
 
@@ -70,6 +74,33 @@ class NumerosLoteria
             if ($apuesta->getNumeroLoteria() === $this) {
                 $apuesta->setNumeroLoteria(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sorteo>
+     */
+    public function getSorteos(): Collection
+    {
+        return $this->sorteos;
+    }
+
+    public function addSorteo(Sorteo $sorteo): static
+    {
+        if (!$this->sorteos->contains($sorteo)) {
+            $this->sorteos->add($sorteo);
+            $sorteo->addNumerosLoteria($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSorteo(Sorteo $sorteo): static
+    {
+        if ($this->sorteos->removeElement($sorteo)) {
+            $sorteo->removeNumerosLoteria($this);
         }
 
         return $this;

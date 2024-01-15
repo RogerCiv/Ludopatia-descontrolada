@@ -13,11 +13,12 @@ class SorteoType extends AbstractType
     {
         $builder
             ->add('Name')
-            ->add('Prize')
-            ->add('Winner')
-            ->add('Fecha')
-            ->add('State')
+            // ->add('Prize')
+            // ->add('Winner')
+            // ->add('Fecha')
+            // ->add('State')
             ->add('cost')
+            ->add('fecha_fin')
         ;
     }
 
