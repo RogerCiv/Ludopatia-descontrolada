@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -28,6 +30,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Apuesta::class)]
+    private Collection $apuestas;
+
+    public function __construct()
+    {
+        $this->apuestas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -97,5 +107,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Apuesta>
+     */
+    public function getApuestas(): Collection
+    {
+        return $this->apuestas;
+    }
+
+    public function addApuesta(Apuesta $apuesta): static
+    {
+        if (!$this->apuestas->contains($apuesta)) {
+            $this->apuestas->add($apuesta);
+            $apuesta->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApuesta(Apuesta $apuesta): static
+    {
+        if ($this->apuestas->removeElement($apuesta)) {
+            // set the owning side to null (unless already changed)
+            if ($apuesta->getUsuario() === $this) {
+                $apuesta->setUsuario(null);
+            }
+        }
+
+        return $this;
     }
 }

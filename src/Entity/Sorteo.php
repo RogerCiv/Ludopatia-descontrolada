@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SorteoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,15 @@ class Sorteo
 
     #[ORM\Column]
     private ?int $cost = null;
+
+    #[ORM\OneToMany(mappedBy: 'sorteo', targetEntity: Apuesta::class)]
+    private Collection $apuestas;
+
+
+    public function __construct()
+    {
+        $this->apuestas = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -108,4 +119,35 @@ class Sorteo
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Apuesta>
+     */
+    public function getApuestas(): Collection
+    {
+        return $this->apuestas;
+    }
+
+    public function addApuesta(Apuesta $apuesta): static
+    {
+        if (!$this->apuestas->contains($apuesta)) {
+            $this->apuestas->add($apuesta);
+            $apuesta->setSorteo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApuesta(Apuesta $apuesta): static
+    {
+        if ($this->apuestas->removeElement($apuesta)) {
+            // set the owning side to null (unless already changed)
+            if ($apuesta->getSorteo() === $this) {
+                $apuesta->setSorteo(null);
+            }
+        }
+
+        return $this;
+    }
+
 }
