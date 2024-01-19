@@ -39,6 +39,9 @@ class Sorteo
     #[ORM\ManyToMany(targetEntity: NumerosLoteria::class, inversedBy: 'sorteos')]
     private Collection $numerosLoteria;
 
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $state = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -164,6 +167,18 @@ class Sorteo
     public function removeNumerosLoteria(NumerosLoteria $numerosLoteria): static
     {
         $this->numerosLoteria->removeElement($numerosLoteria);
+
+        return $this;
+    }
+
+    public function getState(): ?int
+    {
+        return $this->state;
+    }
+
+    public function setState(int $state): static
+    {
+        $this->state = $state;
 
         return $this;
     }

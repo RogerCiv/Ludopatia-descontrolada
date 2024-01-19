@@ -33,7 +33,7 @@ class SorteoController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $sorteo->setFechaInicio(new \DateTime('now'));
-
+            $sorteo->setState(0);
             $entityManager->persist($sorteo);
             $entityManager->flush();
 
@@ -86,4 +86,60 @@ class SorteoController extends AbstractController
 
         return $this->redirectToRoute('app_sorteo_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/realizar_sorteo/{id}', name: 'realizar_sorteo', methods: ['GET'])]
+    public function realizarSorteoManual(Sorteo $sorteo, EntityManagerInterface $entityManager): Response
+{
+    // Realiza el sorteo manualmente, similar a tu lógica actual
+    // Puedes copiar y pegar el código relevante de la acción realizarSorteo
+ // Realiza el sorteo
+ $numerosLoteria = $sorteo->getNumerosLoteria();
+ $numerosDisponibles = [];
+ 
+ foreach ($numerosLoteria as $numeroLoteria) {
+    
+         $numerosDisponibles[] = $numeroLoteria;
+     
+ }
+ dd($numerosDisponibles);
+ $numeroGanador = $numerosDisponibles[array_rand($numerosDisponibles)]->getNumero();
+ $sorteo->setWinner($numeroGanador);
+    // Marca el sorteo como completado
+    $sorteo->setState(1);
+    
+    // Guarda los cambios en la base de datos
+    $entityManager->flush();
+
+    // Redirige de vuelta a la página del sorteo
+    return $this->redirectToRoute('app_sorteo_show', ['id' => $sorteo->getId()]);
+}
+
+// #[Route('/realizar_sorteo/{id}', name: 'realizar_sorteo', methods: ['GET'])]
+// public function realizarSorteoManual(Sorteo $sorteo, EntityManagerInterface $entityManager): Response
+// {
+// // Realiza el sorteo manualmente, similar a tu lógica actual
+// // Puedes copiar y pegar el código relevante de la acción realizarSorteo
+// // Realiza el sorteo
+// $numerosLoteria = $sorteo->getNumerosLoteria();
+// $numerosDisponibles = [];
+
+// foreach ($numerosLoteria as $numeroLoteria) {
+
+//      $numerosDisponibles[] = $numeroLoteria;
+ 
+// }
+// dd($numerosDisponibles);
+// $numeroGanador = $numerosDisponibles[array_rand($numerosDisponibles)]->getNumero();
+// $sorteo->setWinner($numeroGanador);
+// // Marca el sorteo como completado
+// $sorteo->setState(1);
+
+// // Guarda los cambios en la base de datos
+// $entityManager->flush();
+
+// // Redirige de vuelta a la página del sorteo
+// return $this->redirectToRoute('app_sorteo_show', ['id' => $sorteo->getId()]);
+// }
+// ...
+
+
 }

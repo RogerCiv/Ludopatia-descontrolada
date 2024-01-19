@@ -4,6 +4,7 @@
 
 {% block body %}
     <h1>Sorteo</h1>
+   <a href="{{ path('realizar_sorteo', {'id': sorteo.id }) }}" >Realizar Sorteo</a>
 
     <table class="table">
         <tbody>
@@ -37,6 +38,7 @@
             </tr>
         </tbody>
     </table>
+
     
 <ul class="list-group">
         {% for numLoteria in numerosLoteria %}

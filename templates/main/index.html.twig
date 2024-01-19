@@ -6,7 +6,13 @@
 {% if app.user %}
     
     <h1> Bienvenido {{ app.user.username }} </h1>
+    
+    {% for sorteo in sorteos %}
+        {{darsorteo(sorteo)}}
+    {% endfor %}
+        
     <a href="{{ path('app_sorteo_index') }}">Sorteos</a>
+  
 <a href="{{ path('app_user_edit', {'id': app.user.id}) }}">Insertar fondos</a>
 {% endif %}
 
