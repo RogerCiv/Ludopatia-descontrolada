@@ -15,13 +15,14 @@
                 <th>Username</th>
                 <td>{{ user.username }}</td>
             </tr>
-            <tr>
-                <th>Roles</th>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-            </tr>
+        
             <tr>
                 <th>Password</th>
                 <td>{{ user.password }}</td>
+            </tr>
+            <tr>
+                <th>Fondos</th>
+                <td>{{ user.fondos }}</td>
             </tr>
         </tbody>
     </table>

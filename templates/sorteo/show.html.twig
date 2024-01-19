@@ -39,13 +39,26 @@
     </table>
     
 <ul class="list-group">
-
-    {% for numLoteria in numerosLoteria %}
-      <li class="list-item">{{ numLoteria.numero }} <a href="{{ path('app_numeros_loteria_comprar', {'id': numLoteria.id, 'sorteoId': sorteo.id }) }}" class="btn btn-primary">Comprar</a></li>
-
-
-    {% endfor %}
-</ul>
+        {% for numLoteria in numerosLoteria %}
+            {% set numeroYaComprado = false %}
+            
+            {% for numApuesta in apuestas %}
+                {% if numApuesta.numeroLoteria.id == numLoteria.id %}
+                    {% set numeroYaComprado = true %}
+                  
+                {% endif %}
+            {% endfor %}
+            
+            <li class="list-item">
+                {{ numLoteria.numero }}
+                {% if numeroYaComprado %}
+                    <span class="badge badge-success">Comprado</span>
+                {% else %}
+                    <a href="{{ path('app_numeros_loteria_comprar', {'id': numLoteria.id, 'sorteoId': sorteo.id }) }}" class="btn btn-primary">Comprar</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
     <a href="{{ path('app_sorteo_index') }}">back to list</a>
 
     <a href="{{ path('app_sorteo_edit', {'id': sorteo.id}) }}">edit</a>

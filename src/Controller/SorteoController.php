@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Sorteo;
 use App\Form\SorteoType;
+use App\Repository\ApuestaRepository;
 use App\Repository\NumerosLoteriaRepository;
 use App\Repository\SorteoRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,13 +47,14 @@ class SorteoController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_sorteo_show', methods: ['GET'])]
-    public function show(Sorteo $sorteo, NumerosLoteriaRepository $numerosLoteriaRepository): Response
+    public function show(Sorteo $sorteo, NumerosLoteriaRepository $numerosLoteriaRepository, ApuestaRepository $apuestaRepository): Response
     {
         $numerosLoteria = $numerosLoteriaRepository->findAll();
-
+        $apuestas = $apuestaRepository->findAll();
         return $this->render('sorteo/show.html.twig', [
             'sorteo' => $sorteo,
             'numerosLoteria' => $numerosLoteria,
+            'apuestas' => $apuestas,
         ]);
     }
 

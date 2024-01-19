@@ -3,6 +3,12 @@
 {% block title %}Hello MainController!{% endblock %}
 
 {% block body %}
+{% if app.user %}
+    
     <h1> Bienvenido {{ app.user.username }} </h1>
     <a href="{{ path('app_sorteo_index') }}">Sorteos</a>
+<a href="{{ path('app_user_edit', {'id': app.user.id}) }}">Insertar fondos</a>
+{% endif %}
+
+
 {% endblock %}

@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $apuestas;
 
     #[ORM\Column]
-    private ?int $fondos = null;
+    private ?int $fondos = 0;
 
     public function __construct()
     {

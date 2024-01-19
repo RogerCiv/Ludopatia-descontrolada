@@ -87,7 +87,11 @@ class NumerosLoteriaController extends AbstractController
         // Obtener el sorteo
         $sorteo = $entityManager->getRepository(Sorteo::class)->find($sorteoId);
     
-        
+        if($user->getFondos() < $sorteo->getCost()){
+            $this->addFlash('error', 'Fondos insuficientes');
+            return $this->redirectToRoute('app_sorteo_show', ['id' => $sorteoId]);
+        }
+        $user->setFondos($user->getFondos()-$sorteo->getCost());
         // Verificar que los objetos se hayan encontrado
         if (!$user || !$numeroLoteria || !$sorteo) {
             throw $this->createNotFoundException('Usuario, número de lotería o sorteo no encontrado.');
