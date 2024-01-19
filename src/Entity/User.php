@@ -34,6 +34,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'usuario', targetEntity: Apuesta::class)]
     private Collection $apuestas;
 
+    #[ORM\Column]
+    private ?int $fondos = null;
+
     public function __construct()
     {
         $this->apuestas = new ArrayCollection();
@@ -135,6 +138,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $apuesta->setUsuario(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFondos(): ?int
+    {
+        return $this->fondos;
+    }
+
+    public function setFondos(int $fondos): static
+    {
+        $this->fondos = $fondos;
 
         return $this;
     }

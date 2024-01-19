@@ -37,11 +37,12 @@
             </tr>
         </tbody>
     </table>
+    
 <ul class="list-group">
 
     {% for numLoteria in numerosLoteria %}
       <li class="list-item">{{ numLoteria.numero }} <a href="{{ path('app_numeros_loteria_comprar', {'id': numLoteria.id, 'sorteoId': sorteo.id }) }}" class="btn btn-primary">Comprar</a></li>
-      
+
 
     {% endfor %}
 </ul>

@@ -79,10 +79,15 @@ class NumerosLoteriaController extends AbstractController
     
         // Obtener el número de lotería seleccionado
         $numeroLoteria = $entityManager->getRepository(NumerosLoteria::class)->find($id);
+
+        if (!$numeroLoteria) {
+            throw $this->createNotFoundException('No se encontró el número de lotería con el ID: ' . $id);
+        }
     
         // Obtener el sorteo
         $sorteo = $entityManager->getRepository(Sorteo::class)->find($sorteoId);
     
+        
         // Verificar que los objetos se hayan encontrado
         if (!$user || !$numeroLoteria || !$sorteo) {
             throw $this->createNotFoundException('Usuario, número de lotería o sorteo no encontrado.');
