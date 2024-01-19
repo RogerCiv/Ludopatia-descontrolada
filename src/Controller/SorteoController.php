@@ -24,18 +24,15 @@ class SorteoController extends AbstractController
     }
 
     #[Route('/new', name: 'app_sorteo_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager,NumerosLoteriaRepository $numerosLoteriaRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $sorteo = new Sorteo();
         $form = $this->createForm(SorteoType::class, $sorteo);
         $form->handleRequest($request);
-        $numLoterias=$numerosLoteriaRepository->findAll();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $sorteo->setFecha(new \DateTime());
-            foreach ($numLoterias as $numeroLoteria) {
-                $sorteo->addNumerosLoteria($numeroLoteria);
-            }
+            $sorteo->setFechaInicio(new \DateTime('now'));
+
             $entityManager->persist($sorteo);
             $entityManager->flush();
 
@@ -49,10 +46,13 @@ class SorteoController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_sorteo_show', methods: ['GET'])]
-    public function show(Sorteo $sorteo): Response
+    public function show(Sorteo $sorteo, NumerosLoteriaRepository $numerosLoteriaRepository): Response
     {
+        $numerosLoteria = $numerosLoteriaRepository->findAll();
+
         return $this->render('sorteo/show.html.twig', [
             'sorteo' => $sorteo,
+            'numerosLoteria' => $numerosLoteria,
         ]);
     }
 

@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Apuesta;
 use App\Entity\NumerosLoteria;
+use App\Entity\Sorteo;
 use App\Form\NumerosLoteriaType;
+use App\Repository\ApuestaRepository;
 use App\Repository\NumerosLoteriaRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -68,14 +71,35 @@ class NumerosLoteriaController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_numeros_loteria_delete', methods: ['POST'])]
-    public function delete(Request $request, NumerosLoteria $numerosLoterium, EntityManagerInterface $entityManager): Response
+    #[Route('comprar/{id}/{sorteoId}', name: 'app_numeros_loteria_comprar', methods: ['POST', 'GET'])]
+    public function comprar(Request $request, NumerosLoteria $numerosLoterium, EntityManagerInterface $entityManager, int $id, int $sorteoId): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$numerosLoterium->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($numerosLoterium);
-            $entityManager->flush();
+        // Obtener el usuario actual
+        $user = $this->getUser();
+    
+        // Obtener el número de lotería seleccionado
+        $numeroLoteria = $entityManager->getRepository(NumerosLoteria::class)->find($id);
+    
+        // Obtener el sorteo
+        $sorteo = $entityManager->getRepository(Sorteo::class)->find($sorteoId);
+    
+        // Verificar que los objetos se hayan encontrado
+        if (!$user || !$numeroLoteria || !$sorteo) {
+            throw $this->createNotFoundException('Usuario, número de lotería o sorteo no encontrado.');
         }
-
-        return $this->redirectToRoute('app_numeros_loteria_index', [], Response::HTTP_SEE_OTHER);
+    
+        // Crear una nueva instancia de Apuesta
+        $apuesta = new Apuesta();
+        $apuesta->setUsuario($user);
+        $apuesta->setNumeroLoteria($numeroLoteria);
+        $apuesta->setSorteo($sorteo);
+    
+        // Persistir y flush para guardar en la base de datos
+        $entityManager->persist($apuesta);
+        $entityManager->flush();
+    
+        // Redireccionar de nuevo a la vista del sorteo
+        return $this->redirectToRoute('app_sorteo_show', ['id' => $sorteoId], Response::HTTP_SEE_OTHER);
     }
+    
 }

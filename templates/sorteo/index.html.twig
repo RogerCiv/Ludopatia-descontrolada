@@ -12,8 +12,8 @@
                 <th>Name</th>
                 <th>Prize</th>
                 <th>Winner</th>
-                <th>Fecha</th>
-                <th>State</th>
+                <th>Fecha_inicio</th>
+                <th>Fecha_fin</th>
                 <th>Cost</th>
                 <th>actions</th>
             </tr>
@@ -22,11 +22,11 @@
         {% for sorteo in sorteos %}
             <tr>
                 <td>{{ sorteo.id }}</td>
-                <td>{{ sorteo.Name }}</td>
-                <td>{{ sorteo.Prize }}</td>
-                <td>{{ sorteo.Winner }}</td>
-                <td>{{ sorteo.Fecha ? sorteo.Fecha|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ sorteo.State }}</td>
+                <td>{{ sorteo.name }}</td>
+                <td>{{ sorteo.prize }}</td>
+                <td>{{ sorteo.winner }}</td>
+                <td>{{ sorteo.fechaInicio ? sorteo.fechaInicio|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ sorteo.fechaFin ? sorteo.fechaFin|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ sorteo.cost }}</td>
                 <td>
                     <a href="{{ path('app_sorteo_show', {'id': sorteo.id}) }}">show</a>

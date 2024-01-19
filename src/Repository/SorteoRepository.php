@@ -21,6 +21,19 @@ class SorteoRepository extends ServiceEntityRepository
         parent::__construct($registry, Sorteo::class);
     }
 
+    //    public function findByExampleField($value): array
+//    {
+//        return $this->createQueryBuilder('s')
+//            ->andWhere('s.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->orderBy('s.id', 'ASC')
+//            ->setMaxResults(10)
+//            ->getQuery()
+//            ->getResult()
+//        ;
+//    }
+
+
 //    /**
 //     * @return Sorteo[] Returns an array of Sorteo objects
 //     */
